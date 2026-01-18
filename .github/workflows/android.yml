@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
@@ -28,17 +32,31 @@ jobs:
           autoconf automake libtool \
           pkg-config zlib1g-dev
 
-    - name: Install Python dependencies
+    - name: Install Android command line tools
       run: |
-        python -m pip install --upgrade pip
-        pip install buildozer cython
+        sudo mkdir -p $ANDROID_HOME/cmdline-tools
+        cd /tmp
+        wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+        unzip commandlinetools-linux-9477386_latest.zip
+        sudo mv cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+        sudo chmod -R 755 $ANDROID_HOME
+
+    - name: Add Android tools to PATH
+      run: |
+        echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+        echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
     - name: Install Android SDK components
       run: |
         yes | sdkmanager \
           "platform-tools" \
-          "build-tools;33.0.2" \
-          "platforms;android-33"
+          "platforms;android-33" \
+          "build-tools;33.0.2"
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install buildozer cython
 
     - name: Build APK
       run: |
