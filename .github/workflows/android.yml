@@ -23,7 +23,7 @@ jobs:
         sudo apt update
         sudo apt install -y \
           zip unzip openjdk-17-jdk \
-          libncurses5 libstdc++6 \
+          libncurses6 libstdc++6 \
           libffi-dev libssl-dev \
           autoconf automake libtool \
           pkg-config zlib1g-dev
