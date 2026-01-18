@@ -26,7 +26,8 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y \
-          zip unzip openjdk-17-jdk \
+          zip unzip wget \
+          openjdk-17-jdk \
           libncurses6 libstdc++6 \
           libffi-dev libssl-dev \
           autoconf automake libtool \
@@ -46,9 +47,13 @@ jobs:
         echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
         echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
 
+    - name: Accept Android SDK licenses
+      run: |
+        yes | sdkmanager --sdk_root=$ANDROID_HOME --licenses
+
     - name: Install Android SDK components
       run: |
-        yes | sdkmanager \
+        sdkmanager --sdk_root=$ANDROID_HOME \
           "platform-tools" \
           "platforms;android-33" \
           "build-tools;33.0.2"
