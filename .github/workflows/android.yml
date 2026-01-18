@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      ANDROID_HOME: /home/runner/android-sdk
+      ANDROID_SDK_ROOT: /home/runner/android-sdk
 
     steps:
     - name: Checkout source
@@ -33,14 +33,17 @@ jobs:
           autoconf automake libtool \
           pkg-config zlib1g-dev
 
+    - name: Create Android SDK directory
+      run: |
+        mkdir -p $ANDROID_HOME
+
     - name: Install Android command line tools
       run: |
-        sudo mkdir -p $ANDROID_HOME/cmdline-tools
         cd /tmp
         wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
         unzip commandlinetools-linux-9477386_latest.zip
-        sudo mv cmdline-tools $ANDROID_HOME/cmdline-tools/latest
-        sudo chmod -R 755 $ANDROID_HOME
+        mkdir -p $ANDROID_HOME/cmdline-tools
+        mv cmdline-tools $ANDROID_HOME/cmdline-tools/latest
 
     - name: Add Android tools to PATH
       run: |
