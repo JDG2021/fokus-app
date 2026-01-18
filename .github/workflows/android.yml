@@ -42,6 +42,11 @@ jobs:
         mkdir -p $ANDROID_HOME/cmdline-tools
         mv cmdline-tools $ANDROID_HOME/cmdline-tools/latest
 
+    - name: Create legacy tools/bin for Buildozer
+      run: |
+        mkdir -p $ANDROID_HOME/tools/bin
+        ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
+
     - name: Add Android tools to PATH
       run: |
         echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
@@ -58,7 +63,7 @@ jobs:
           "platforms;android-33" \
           "build-tools;33.0.2"
 
-    - name: 🔗 Link SDK where Buildozer expects it
+    - name: Link SDK where Buildozer expects it
       run: |
         mkdir -p /home/runner/.buildozer/android/platform
         ln -s $ANDROID_HOME /home/runner/.buildozer/android/platform/android-sdk
